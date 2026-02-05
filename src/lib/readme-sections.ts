@@ -114,7 +114,7 @@ export const SECTIONS: ReadmeSection[] = [
   {
     id: 'acknowledgements',
     label: 'Acknowledgements',
-    placeholder: '- [Awesome README](https://github.com/matiassingers/awesome-readme)\n- [Readme.so](https://readme.so)',
+    placeholder: '- [Project README](https://github.com/MarcusMedinaPro/readme-maker)\n- [Readme.so](https://readme.so)',
     type: 'textarea',
     prefix: '## Acknowledgements\n\n',
     icon: '🙏',
