@@ -165,9 +165,24 @@ const Index = () => {
                 )}
               </pre>
             )}
-          </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-card/30 py-3 text-center">
+        <p className="text-xs text-muted-foreground font-mono">
+          Made with 💚 using{' '}
+          <a
+            href="https://lovable.dev/invite/T7TQIG5"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline underline-offset-2"
+          >
+            Lovable
+          </a>
+        </p>
+      </footer>
+    </div>
     </div>
   );
 };
