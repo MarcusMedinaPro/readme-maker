@@ -10,10 +10,12 @@ import { cn } from '@/lib/utils';
 type PreviewMode = 'preview' | 'raw';
 
 const Index = () => {
-  const { data, updateSection, markdown, filledSections, reset, sections } = useReadmeGenerator();
+  const { data, updateSection, markdown, filledSections, reset, sections, reorderSections } = useReadmeGenerator();
   const [copied, setCopied] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>('preview');
   const [expandedMobile, setExpandedMobile] = useState<'editor' | 'preview'>('editor');
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const handleCopy = useCallback(async () => {
     if (!markdown) {
@@ -30,6 +32,28 @@ const Index = () => {
     reset();
     toast.info('All sections cleared');
   }, [reset]);
+
+  const handleDragStart = useCallback((index: number) => {
+    setDragIndex(index);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  }, []);
+
+  const handleDrop = useCallback((_e: React.DragEvent, toIndex: number) => {
+    if (dragIndex !== null && dragIndex !== toIndex) {
+      reorderSections(dragIndex, toIndex);
+    }
+    setDragIndex(null);
+    setDragOverIndex(null);
+  }, [dragIndex, reorderSections]);
+
+  const handleDragEnd = useCallback(() => {
+    setDragIndex(null);
+    setDragOverIndex(null);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -99,14 +123,21 @@ const Index = () => {
             expandedMobile !== 'editor' && "hidden lg:block"
           )}>
             <p className="text-xs font-mono text-muted-foreground mb-4">
-              Fill in the sections you need — empty ones are automatically excluded.
+              Fill in the sections you need — drag to reorder, empty ones are excluded.
             </p>
-            {sections.map((section) => (
+            {sections.map((section, index) => (
               <SectionField
                 key={section.id}
                 section={section}
                 value={data[section.id] || ''}
                 onChange={(val) => updateSection(section.id, val)}
+                index={index}
+                isDragging={dragIndex === index}
+                dragOverIndex={dragOverIndex}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDragEnd={handleDragEnd}
+                onDrop={handleDrop}
               />
             ))}
           </div>
@@ -165,6 +196,7 @@ const Index = () => {
                 )}
               </pre>
             )}
+          </div>
         </div>
       </div>
 
@@ -182,7 +214,6 @@ const Index = () => {
           </a>
         </p>
       </footer>
-    </div>
     </div>
   );
 };

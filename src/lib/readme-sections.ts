@@ -121,10 +121,11 @@ export const SECTIONS: ReadmeSection[] = [
   },
 ];
 
-export function generateMarkdown(data: Record<string, string>): string {
+export function generateMarkdown(data: Record<string, string>, orderedSections?: ReadmeSection[]): string {
   const parts: string[] = [];
+  const sections = orderedSections || SECTIONS;
 
-  for (const section of SECTIONS) {
+  for (const section of sections) {
     const value = data[section.id]?.trim();
     if (!value) continue;
 
